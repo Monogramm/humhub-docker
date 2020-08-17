@@ -12,6 +12,10 @@ HUMHUB_EMAIL=${HUMHUB_EMAIL:-"humhub@example.com"}
 HUMHUB_LANG=${HUMHUB_LANG:-"en-US"}
 HUMHUB_DEBUG=${HUMHUB_DEBUG:-"false"}
 
+HUMHUB_ADMIN_LOGIN=${HUMHUB_ADMIN_LOGIN:-"admin"}
+HUMHUB_ADMIN_EMAIL=${HUMHUB_ADMIN_EMAIL:-${HUMHUB_EMAIL}}
+HUMHUB_ADMIN_PASSWORD=${HUMHUB_ADMIN_PASSWD:-"test"}
+
 export NGINX_CLIENT_MAX_BODY_SIZE=${NGINX_CLIENT_MAX_BODY_SIZE:-10m}
 
 wait_for_db() {
@@ -75,7 +79,7 @@ else
 			echo "Setting base url to: $HUMHUB_BASE_URL"
 			php yii installer/set-base-url "${HUMHUB_BASE_URL}"
 		fi
-		php yii installer/create-admin-account
+		php yii installer/create-admin-account "${HUMHUB_ADMIN_LOGIN}" "${HUMHUB_ADMIN_EMAIL}" "${HUMHUB_ADMIN_PASSWORD}"
 		chown -R nginx:nginx /var/www/localhost/htdocs/protected/runtime
 		chown nginx:nginx /var/www/localhost/htdocs/protected/config/dynamic.php
 	fi
