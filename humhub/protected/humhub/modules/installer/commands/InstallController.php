@@ -101,10 +101,8 @@ class InstallController extends Controller
 
         DynamicConfig::rewrite();
 
-        $this->setDatabaseInstalled();
-
         $this->stdout("  * Finishing\n", Console::FG_YELLOW);
-        $this->setInstalled();
+        $this->setDatabaseInstalled();
 
         return ExitCode::OK;
     }
