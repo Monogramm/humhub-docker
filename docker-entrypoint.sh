@@ -16,6 +16,7 @@ HUMHUB_DEBUG=${HUMHUB_DEBUG:-"false"}
 
 export NGINX_ENABLED=${NGINX_ENABLED:-'true'}
 export NGINX_CLIENT_MAX_BODY_SIZE=${NGINX_CLIENT_MAX_BODY_SIZE:-10m}
+export NGINX_CI_PASS=${NGINX_CI_PASS:-'unix:/run/php-fpm.sock'}
 
 wait_for_db() {
 	if [ "$WAIT_FOR_DB" == "false" ]; then
@@ -128,6 +129,10 @@ if [ "$NGINX_ENABLED" != "false" ]; then
 
 	echo "Writing Nginx Config"
 	envsubst "\$NGINX_CLIENT_MAX_BODY_SIZE" < /etc/nginx/nginx.conf > /tmp/nginx.conf
+	cat /tmp/nginx.conf > /etc/nginx/nginx.conf
+	rm /tmp/nginx.conf
+
+	envsubst "\$NGINX_CI_PASS" < /etc/nginx/nginx.conf > /tmp/nginx.conf
 	cat /tmp/nginx.conf > /etc/nginx/nginx.conf
 	rm /tmp/nginx.conf
 
