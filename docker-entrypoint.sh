@@ -70,6 +70,10 @@ wait_for_db() {
 	done
 }
 
+escape_for_replace() {
+	printf '%s\n' "${1}" | sed -e 's/[\/&]/\\&/g'
+}
+
 echo "=="
 
 if [ "$HUMHUB_ENABLED" != "false" ]; then
@@ -114,14 +118,14 @@ if [ "$HUMHUB_ENABLED" != "false" ]; then
 		fi
 
 		echo "Config preprocessing before install ..."
-		sed -i \
-			-e "s/getenv('HUMHUB_REDIS_HOSTNAME')/'${HUMHUB_REDIS_HOSTNAME}'/g" \
-			-e "s/getenv('HUMHUB_REDIS_PORT')/${HUMHUB_REDIS_PORT}/g" \
-			-e "s/getenv('HUMHUB_REDIS_PASSWORD')/'${HUMHUB_REDIS_PASSWORD}'/g" \
-			-e "s/getenv('HUMHUB_CACHE_CLASS')/'${HUMHUB_CACHE_CLASS}'/g" \
-			-e "s/getenv('HUMHUB_QUEUE_CLASS')/'${HUMHUB_QUEUE_CLASS}'/g" \
-			-e "s/getenv('HUMHUB_PUSH_URL')/'${HUMHUB_PUSH_URL}'/g" \
-			-e "s/getenv('HUMHUB_PUSH_JWT_TOKEN')/'${HUMHUB_PUSH_JWT_TOKEN}'/g" \
+		sed \
+			"s|getenv('HUMHUB_REDIS_HOSTNAME')|'$(escape_for_replace ${HUMHUB_REDIS_HOSTNAME} )'|g;
+			s|getenv('HUMHUB_REDIS_PORT')|$(escape_for_replace ${HUMHUB_REDIS_PORT} )|g;
+			s|getenv('HUMHUB_REDIS_PASSWORD')|'$(escape_for_replace ${HUMHUB_REDIS_PASSWORD} )'|g;
+			s|getenv('HUMHUB_CACHE_CLASS')|'$(escape_for_replace ${HUMHUB_CACHE_CLASS} )'|g;
+			s|getenv('HUMHUB_QUEUE_CLASS')|'$(escape_for_replace ${HUMHUB_QUEUE_CLASS} )'|g;
+			s|getenv('HUMHUB_PUSH_URL')|'$(escape_for_replace ${HUMHUB_PUSH_URL} )'|g;
+			s|getenv('HUMHUB_PUSH_JWT_TOKEN')|'$(escape_for_replace ${HUMHUB_PUSH_JWT_TOKEN} )'|g" \
 			/var/www/localhost/htdocs/protected/config/common.php
 
 		if [ "$AUTOINSTALL" != "false" ]; then
