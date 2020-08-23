@@ -195,7 +195,7 @@ if [ "$HUMHUB_ENABLED" != "false" ]; then
 				/var/www/localhost/htdocs/protected/config/common.php
 		fi
 
-		if [ "$HUMHUB_TRUSTED_HOSTS" != "false" ]; then
+		if [ -n "$HUMHUB_TRUSTED_HOSTS" ]; then
 			sed -i \
 				-e "s|'trustedHosts' => \['.*'\]|'trustedHosts' => ['$HUMHUB_TRUSTED_HOSTS']|g" \
 				/var/www/localhost/htdocs/protected/config/web.php
