@@ -113,6 +113,17 @@ if [ "$HUMHUB_ENABLED" != "false" ]; then
 			AUTOINSTALL="false"
 		fi
 
+		echo "Config preprocessing before install ..."
+		sed -i \
+			-e "s/getenv('HUMHUB_REDIS_HOSTNAME')/'${HUMHUB_REDIS_HOSTNAME}'/g" \
+			-e "s/getenv('HUMHUB_REDIS_PORT')/${HUMHUB_REDIS_PORT}/g" \
+			-e "s/getenv('HUMHUB_REDIS_PASSWORD')/'${HUMHUB_REDIS_PASSWORD}'/g" \
+			-e "s/getenv('HUMHUB_CACHE_CLASS')/'${HUMHUB_CACHE_CLASS}'/g" \
+			-e "s/getenv('HUMHUB_QUEUE_CLASS')/'${HUMHUB_QUEUE_CLASS}'/g" \
+			-e "s/getenv('HUMHUB_PUSH_URL')/'${HUMHUB_PUSH_URL}'/g" \
+			-e "s/getenv('HUMHUB_PUSH_JWT_TOKEN')/'${HUMHUB_PUSH_JWT_TOKEN}'/g" \
+			/var/www/localhost/htdocs/protected/config/common.php
+
 		if [ "$AUTOINSTALL" != "false" ]; then
 			echo "Installing..."
 			php yii installer/write-db-config "$HUMHUB_DB_HOST" "$HUMHUB_DB_NAME" "$HUMHUB_DB_USER" "$HUMHUB_DB_PASSWORD"
@@ -177,13 +188,6 @@ if [ "$HUMHUB_ENABLED" != "false" ]; then
 		if [ $SET_PJAX != "false" ]; then
 			sed -i \
 				-e "s/'enablePjax' => false/'enablePjax' => true/g" \
-				-e "s/getenv('HUMHUB_REDIS_HOSTNAME')/'${HUMHUB_REDIS_HOSTNAME}'/g" \
-				-e "s/getenv('HUMHUB_REDIS_PORT')/${HUMHUB_REDIS_PORT}/g" \
-				-e "s/getenv('HUMHUB_REDIS_PASSWORD')/'${HUMHUB_REDIS_PASSWORD}'/g" \
-				-e "s/getenv('HUMHUB_CACHE_CLASS')/'${HUMHUB_CACHE_CLASS}'/g" \
-				-e "s/getenv('HUMHUB_QUEUE_CLASS')/'${HUMHUB_QUEUE_CLASS}'/g" \
-				-e "s/getenv('HUMHUB_PUSH_URL')/'${HUMHUB_PUSH_URL}'/g" \
-				-e "s/getenv('HUMHUB_PUSH_JWT_TOKEN')/'${HUMHUB_PUSH_JWT_TOKEN}'/g" \
 				/var/www/localhost/htdocs/protected/config/common.php
 		fi
 	else
