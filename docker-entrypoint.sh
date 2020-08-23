@@ -118,7 +118,7 @@ if [ "$HUMHUB_ENABLED" != "false" ]; then
 		fi
 
 		echo "Config preprocessing before install ..."
-		sed \
+		sed -i \
 			"s|getenv('HUMHUB_REDIS_HOSTNAME')|'$(escape_for_replace ${HUMHUB_REDIS_HOSTNAME} )'|g;
 			s|getenv('HUMHUB_REDIS_PORT')|$(escape_for_replace ${HUMHUB_REDIS_PORT} )|g;
 			s|getenv('HUMHUB_REDIS_PASSWORD')|'$(escape_for_replace ${HUMHUB_REDIS_PASSWORD} )'|g;
