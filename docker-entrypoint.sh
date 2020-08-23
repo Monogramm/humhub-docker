@@ -194,6 +194,12 @@ if [ "$HUMHUB_ENABLED" != "false" ]; then
 				-e "s/'enablePjax' => false/'enablePjax' => true/g" \
 				/var/www/localhost/htdocs/protected/config/common.php
 		fi
+
+		if [ "$HUMHUB_TRUSTED_HOSTS" != "false" ]; then
+			sed -i \
+				-e "s/'trustedHosts' => \['127.0.0.1/32'\]/'trustedHosts' => ['$HUMHUB_TRUSTED_HOSTS']/g" \
+				/var/www/localhost/htdocs/protected/config/web.php
+		fi
 	else
 		echo "no installation config found or not installed"
 		INTEGRITY_CHECK="false"
